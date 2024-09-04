@@ -205,6 +205,7 @@ for value in dataset:
 print(f"Total rotations in AVL Tree: {avl_tree.rotations}")
 print(f"Total rotations in Red-Black Tree: {rb_tree.rotations}")
 
+# Generate small dataset
 dataset = [5, 2, 9, 1, 3, 8, 10, 4, 7, 6]
 
 avl_tree = AVLTree()
