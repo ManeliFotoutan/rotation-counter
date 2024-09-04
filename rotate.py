@@ -187,26 +187,26 @@ class RBTree:
         y.right = x
         x.parent = y
 
-# Generate large dataset
-num_elements = 1000000
-dataset = random.sample(range(1, 10000000), num_elements)
+# # Generate large dataset
+# num_elements = 1000000
+# dataset = random.sample(range(1, 10000000), num_elements)
 
-# Insert dataset into AVL tree and count rotations
-avl_tree = AVLTree()
-for value in dataset:
-    avl_tree.insert_key(value)
+# # Insert dataset into AVL tree and count rotations
+# avl_tree = AVLTree()
+# for value in dataset:
+#     avl_tree.insert_key(value)
 
-# Insert dataset into Red-Black tree and count rotations
-rb_tree = RBTree()
-for value in dataset:
-    rb_tree.insert(value)
+# # Insert dataset into Red-Black tree and count rotations
+# rb_tree = RBTree()
+# for value in dataset:
+#     rb_tree.insert(value)
 
-# Print the results
-print(f"Total rotations in AVL Tree: {avl_tree.rotations}")
-print(f"Total rotations in Red-Black Tree: {rb_tree.rotations}")
+# # Print the results
+# print(f"Total rotations in AVL Tree: {avl_tree.rotations}")
+# print(f"Total rotations in Red-Black Tree: {rb_tree.rotations}")
 
 # Generate small dataset
-dataset = [5, 2, 9, 1, 3, 8, 10, 4, 7, 6]
+dataset = [10, 20, 30, 40, 50, 25]
 
 avl_tree = AVLTree()
 for value in dataset:
