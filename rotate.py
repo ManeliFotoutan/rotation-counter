@@ -1,6 +1,5 @@
 import random
 
-# Node class for AVL Tree
 class AVLNode:
     def __init__(self, key):
         self.key = key
@@ -8,119 +7,95 @@ class AVLNode:
         self.right = None
         self.height = 1
 
-# AVL Tree class with rotation counting
 class AVLTree:
     def __init__(self):
         self.root = None
         self.rotations = 0
 
-    def insert(self, root, key):
-        # Step 1: Perform normal BST insert
-        if not root:
+    def insert_key(self, key):
+        self.root = self._insert(self.root, key)
+
+    def _insert(self, node, key):
+        if not node:
             return AVLNode(key)
-        elif key < root.key:
-            root.left = self.insert(root.left, key)
+        if key < node.key:
+            node.left = self._insert(node.left, key)
         else:
-            root.right = self.insert(root.right, key)
+            node.right = self._insert(node.right, key)
 
-        # Step 2: Update height of the ancestor node
-        root.height = 1 + max(self.get_height(root.left), self.get_height(root.right))
+        node.height = 1 + max(self._get_height(node.left), self._get_height(node.right))
+        balance = self._get_balance(node)
 
-        # Step 3: Get the balance factor
-        balance = self.get_balance(root)
-
-        # Step 4: Check for unbalance and rotate accordingly
-
-        # Left Left Case
-        if balance > 1 and key < root.left.key:
+        if balance > 1 and key < node.left.key:
             self.rotations += 1
-            return self.right_rotate(root)
-
-        # Right Right Case
-        if balance < -1 and key > root.right.key:
+            return self._right_rotate(node)
+        if balance < -1 and key > node.right.key:
             self.rotations += 1
-            return self.left_rotate(root)
+            return self._left_rotate(node)
+        if balance > 1 and key > node.left.key:
+            self.rotations += 2
+            node.left = self._left_rotate(node.left)
+            return self._right_rotate(node)
+        if balance < -1 and key < node.right.key:
+            self.rotations += 2
+            node.right = self._right_rotate(node.right)
+            return self._left_rotate(node)
 
-        # Left Right Case
-        if balance > 1 and key > root.left.key:
-            root.left = self.left_rotate(root.left)
-            self.rotations += 1
-            return self.right_rotate(root)
+        return node
 
-        # Right Left Case
-        if balance < -1 and key < root.right.key:
-            root.right = self.right_rotate(root.right)
-            self.rotations += 1
-            return self.left_rotate(root)
-
-        return root
-
-    def left_rotate(self, z):
+    def _left_rotate(self, z):
         y = z.right
         T2 = y.left
-
         y.left = z
         z.right = T2
-
-        z.height = 1 + max(self.get_height(z.left), self.get_height(z.right))
-        y.height = 1 + max(self.get_height(y.left), self.get_height(y.right))
-
+        z.height = 1 + max(self._get_height(z.left), self._get_height(z.right))
+        y.height = 1 + max(self._get_height(y.left), self._get_height(y.right))
         return y
 
-    def right_rotate(self, z):
+    def _right_rotate(self, z):
         y = z.left
         T3 = y.right
-
         y.right = z
         z.left = T3
-
-        z.height = 1 + max(self.get_height(z.left), self.get_height(z.right))
-        y.height = 1 + max(self.get_height(y.left), self.get_height(y.right))
-
+        z.height = 1 + max(self._get_height(z.left), self._get_height(z.right))
+        y.height = 1 + max(self._get_height(y.left), self._get_height(y.right))
         return y
 
-    def get_height(self, root):
-        if not root:
+    def _get_height(self, node):
+        if not node:
             return 0
-        return root.height
+        return node.height
 
-    def get_balance(self, root):
-        if not root:
+    def _get_balance(self, node):
+        if not node:
             return 0
-        return self.get_height(root.left) - self.get_height(root.right)
+        return self._get_height(node.left) - self._get_height(node.right)
 
-    def insert_key(self, key):
-        self.root = self.insert(self.root, key)
-
-# Node class for Red-Black Tree
 class RBNode:
-    def __init__(self, key):
+    def __init__(self, key, color='red'):
         self.key = key
+        self.color = color
         self.left = None
         self.right = None
-        self.color = 1  # Red = 1, Black = 0
+        self.parent = None
 
-# Red-Black Tree class with rotation counting
 class RBTree:
     def __init__(self):
-        self.NULL = RBNode(0)
-        self.NULL.color = 0
-        self.NULL.left = None
-        self.NULL.right = None
-        self.root = self.NULL
+        self.TNULL = RBNode(0, 'black')
+        self.root = self.TNULL
         self.rotations = 0
 
     def insert(self, key):
         node = RBNode(key)
         node.parent = None
-        node.left = self.NULL
-        node.right = self.NULL
-        node.color = 1  # New node must be red
+        node.left = self.TNULL
+        node.right = self.TNULL
+        node.color = 'red'
 
         parent = None
         current = self.root
 
-        while current != self.NULL:
+        while current != self.TNULL:
             parent = current
             if node.key < current.key:
                 current = current.left
@@ -136,20 +111,57 @@ class RBTree:
             parent.right = node
 
         if node.parent is None:
-            node.color = 0
+            node.color = 'black'
             return
 
         if node.parent.parent is None:
             return
 
-        self.fix_insert(node)
+        self._fix_insert(node)
 
-    def left_rotate(self, x):
+    def _fix_insert(self, k):
+        while k.parent.color == 'red':
+            if k.parent == k.parent.parent.right:
+                u = k.parent.parent.left
+                if u.color == 'red':
+                    u.color = 'black'
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    k = k.parent.parent
+                else:
+                    if k == k.parent.left:
+                        k = k.parent
+                        self._right_rotate(k)
+                        self.rotations += 1
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    self._left_rotate(k.parent.parent)
+                    self.rotations += 1
+            else:
+                u = k.parent.parent.right
+                if u.color == 'red':
+                    u.color = 'black'
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    k = k.parent.parent
+                else:
+                    if k == k.parent.right:
+                        k = k.parent
+                        self._left_rotate(k)
+                        self.rotations += 1
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    self._right_rotate(k.parent.parent)
+                    self.rotations += 1
+            if k == self.root:
+                break
+        self.root.color = 'black'
+
+    def _left_rotate(self, x):
         y = x.right
         x.right = y.left
-        if y.left != self.NULL:
+        if y.left != self.TNULL:
             y.left.parent = x
-
         y.parent = x.parent
         if x.parent is None:
             self.root = y
@@ -160,14 +172,11 @@ class RBTree:
         y.left = x
         x.parent = y
 
-        self.rotations += 1
-
-    def right_rotate(self, x):
+    def _right_rotate(self, x):
         y = x.left
         x.left = y.right
-        if y.right != self.NULL:
+        if y.right != self.TNULL:
             y.right.parent = x
-
         y.parent = x.parent
         if x.parent is None:
             self.root = y
@@ -178,39 +187,35 @@ class RBTree:
         y.right = x
         x.parent = y
 
-        self.rotations += 1
+# Generate large dataset
+num_elements = 1000000
+dataset = random.sample(range(1, 10000000), num_elements)
 
-    def fix_insert(self, k):
-        while k.parent.color == 1:
-            if k.parent == k.parent.parent.right:
-                u = k.parent.parent.left
-                if u.color == 1:
-                    u.color = 0
-                    k.parent.color = 0
-                    k.parent.parent.color = 1
-                    k = k.parent.parent
-                else:
-                    if k == k.parent.left:
-                        k = k.parent
-                        self.right_rotate(k)
-                    k.parent.color = 0
-                    k.parent.parent.color = 1
-                    self.left_rotate(k.parent.parent)
-            else:
-                u = k.parent.parent.right
+# Insert dataset into AVL tree and count rotations
+avl_tree = AVLTree()
+for value in dataset:
+    avl_tree.insert_key(value)
 
-                if u.color == 1:
-                    u.color = 0
-                    k.parent.color = 0
-                    k.parent.parent.color = 1
-                    k = k.parent.parent
-                else:
-                    if k == k.parent.right:
-                        k = k.parent
-                        self.left_rotate(k)
-                    k.parent.color = 0
-                    k.parent.parent.color = 1
-                    self.right_rotate(k.parent.parent)
-            if k == self.root:
-                break
-        self.root.color = 0
+# Insert dataset into Red-Black tree and count rotations
+rb_tree = RBTree()
+for value in dataset:
+    rb_tree.insert(value)
+
+# Print the results
+print(f"Total rotations in AVL Tree: {avl_tree.rotations}")
+print(f"Total rotations in Red-Black Tree: {rb_tree.rotations}")
+
+dataset = [5, 2, 9, 1, 3, 8, 10, 4, 7, 6]
+
+avl_tree = AVLTree()
+for value in dataset:
+    avl_tree.insert_key(value)
+
+# Insert dataset into Red-Black tree and count rotations
+rb_tree = RBTree()
+for value in dataset:
+    rb_tree.insert(value)
+
+# Print the results
+print(f"Total rotations in AVL Tree: {avl_tree.rotations}")
+print(f"Total rotations in Red-Black Tree: {rb_tree.rotations}")
