@@ -1,41 +1,62 @@
-cat > README.md << EOF
-# FET Current and Voltage Analysis Project
+# rotation-counter
+This project contains Python implementations of two self-balancing binary search trees: **AVL Tree** and **Red-Black Tree (RB Tree)**. The code inserts a dataset into both trees and counts the total number of rotations performed during insertions. This allows comparison of the balancing effort between the two tree types.
 
-## Project Overview
-This project includes code for calculating and analyzing drain current (ID) and gate-source voltage (VGS) in various operating states of P-Channel and N-Channel FET transistors.  
-The \`graffic\` folder contains the GUI (graphical user interface) related code, while the main calculation files are outside this folder.
+---
 
 ## Features
-- Calculation of drain current (ID) and gate-source voltage (VGS) for different operating states of P-Channel FETs  
-- Parameter extraction from circuit schematic images using OCR (pytesseract)  
-- User-friendly GUI built with Tkinter for input and result display  
-- Support for multiple circuit states and types of analyses  
 
-## Prerequisites
-- Python 3.x  
-- Required Python packages: numpy, scipy, sympy, tkinter, pillow, pytesseract, pyttsx3  
-- Installation of Tesseract-OCR engine on your system (e.g., located at \`/usr/bin/tesseract\` on Linux)  
+- **AVL Tree**
+  - Maintains strict balance using node heights.
+  - Performs left and right rotations to rebalance.
+  - Counts single and double rotations during insertion.
 
-## How to Run
-1. Make sure all prerequisites are installed.  
-2. Run the main program using:  
-\`\`\`
-python run.py
-\`\`\`  
-3. Choose the desired circuit state or upload a circuit image to extract parameters automatically.  
-4. Results will be displayed as text and optionally read aloud using text-to-speech.
+- **Red-Black Tree**
+  - Maintains balance by enforcing color properties.
+  - Uses rotations and recoloring during insertions.
+  - Counts rotations performed to fix violations.
 
-## More Information
-For detailed explanations of the algorithms, design decisions, and analysis, please refer to the [problem_coloring graph.pdf](./problem_coloring%20graph.pdf) file included in this repository.
+- Insert arbitrary datasets into either tree and track rotation counts.
 
-## Project Structure
-- \`graffic/\` : GUI related code  
-- \`dc_fet.py\` : Calculations for N-Channel FET  
-- \`dc_fet_pnp.py\` : Calculations for P-Channel FET  
-- \`input_n.py\`, \`input_p.py\` : GUI for image processing and input handling  
-- \`run.py\` : Main executable file  
+---
 
-## Contact
-For questions or support, please contact the developer.
+## Files
 
-EOF
+- `main.py` (contains the code you see here)
+- `problem.pdf` (detailed description of the algorithm, design decisions, and analysis)
+
+---
+
+## Usage
+
+1. Import or copy the code into a Python file.
+2. Modify the dataset in the script or use a large randomly generated dataset (commented out in code).
+3. Run the script to insert the values into both trees.
+4. View the output displaying total rotations performed by each tree.
+
+---
+
+## Code Explanation
+
+- `AVLNode` and `AVLTree` classes implement the AVL tree with height tracking and balancing.
+- `RBNode` and `RBTree` classes implement the Red-Black tree with color and parent pointers.
+- Both trees keep a `rotations` counter to track how many rotations occurred during insertions.
+- Example dataset is used to demonstrate functionality with small data.
+- You can uncomment the large dataset block to test performance on large inputs.
+
+---
+
+## Example Output
+
+Total rotations in AVL Tree: X
+Total rotations in Red-Black Tree: Y
+
+Where `X` and `Y` are the total rotation counts for AVL and Red-Black trees respectively.
+
+---
+
+## Notes
+
+- The large dataset section is commented out to avoid long execution times.
+- Red-Black Tree uses sentinel `TNULL` nodes to simplify boundary conditions.
+- Rotations include single and double rotations where applicable.
+- For detailed theoretical background and complexity analysis, please see the attached `problem.pdf` file.
