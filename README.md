@@ -76,8 +76,4 @@ For full algorithm explanation and theoretical background, refer to:
 
 problem.pdf
 
-If you plan to extend functionality (e.g. visualization), you might optionally install:
 
-```bash
-pip install matplotlib
-```
