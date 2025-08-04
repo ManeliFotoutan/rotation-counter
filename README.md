@@ -24,26 +24,21 @@ This project contains Python implementations of two self-balancing binary search
 - [`problem.pdf`](./problem.pdf) – Detailed description of the algorithm, design decisions, and complexity analysis.
 
 
-##  Dependencies
+##  Requirements
 
-Make sure you have Python 3.6+ installed. Then install any required libraries:
+Make sure you have **Python 3.6+** installed.
 
-> 🔹 This project only uses standard Python libraries (`random`, `time`, etc.).  
-> 🔹 No external packages are required for running the code.
+ This project uses only **standard Python libraries**:
+- `random`
+- `time`
 
- Usage
-Clone the repository or copy the code into a Python file:
+No external packages are required.
+
+If you want to use optional features like visualization in the future, you can install:
 
 ```bash
-git clone https://github.com/your-username/rotation-counter.git
-cd rotation-counter
+pip install matplotlib
 ```
-Open main.py and modify the dataset if needed.
-Run the script:
-```bash
-python main.py
-```
-The output will display the total number of rotations for both trees.
 
 ## Code Explanation
 AVLNode and AVLTree classes:
